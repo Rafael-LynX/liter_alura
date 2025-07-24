@@ -7,24 +7,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="artistas")
+@Table(name="autores")
 public class Autor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nome;
-
     private Integer anoDeNascimento;
-
     private Integer anoDeFalecimento;
 
-    @OneToMany
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Livro> livros = new ArrayList<>();
 
-    public Autor(String nome) {
-        this.nome = nome;
+    public Autor() {}
+
+    public Autor(DadosAutor dadosAutor) {
+        this.nome = dadosAutor.nome();
+        this.anoDeNascimento = dadosAutor.anoDeNascimento();
+        this.anoDeFalecimento = dadosAutor.anoDeFalecimento();
     }
 
     public Long getId() {
@@ -64,6 +65,7 @@ public class Autor {
     }
 
     public void setLivros(List<Livro> livros) {
+        livros.forEach(l -> l.setAutor(this));
         this.livros = livros;
     }
 

@@ -3,6 +3,7 @@ package br.com.alura.liter_alura.model;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name="livros")
 public class Livro {
@@ -10,18 +11,24 @@ public class Livro {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-
     private String titulo;
+    private String idioma;
+    private Integer downloads;
 
     @ManyToOne
+    @JoinColumn(name = "autor_id")
     private Autor autor;
 
-    private String idioma;
+    public Livro() {}
 
-    private Double downloads;
+    public Livro(DadosLivro dadosLivro, Autor autor) {
+        this.titulo = dadosLivro.titulo();
+        this.idioma = dadosLivro.idioma().isEmpty() ? "desconhecido" : dadosLivro.idioma().get(0);
+        this.downloads = dadosLivro.downloads();
+        this.autor = autor;
+    }
 
-    public Livro(String titulo) {
-        this.titulo = titulo;
+    public Livro(DadosLivro dados) {
     }
 
 
@@ -57,11 +64,11 @@ public class Livro {
         this.idioma = idioma;
     }
 
-    public Double getDownloads() {
+    public Integer getDownloads() {
         return downloads;
     }
 
-    public void setDownloads(Double downloads) {
+    public void setDownloads(Integer downloads) {
         this.downloads = downloads;
     }
 
